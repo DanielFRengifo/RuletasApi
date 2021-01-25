@@ -11,9 +11,8 @@ public class Gamble
 	private boolean state; 
 	private ArrayList<String[]> bets;
 	
-	public Gamble(String id)
+	public Gamble()
 	{
-		this.id = id; 
 		this.state = false;
 		this.bets = new ArrayList<String[]>(); 
 	}	
