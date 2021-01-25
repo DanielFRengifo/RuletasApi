@@ -7,22 +7,22 @@ public class Gamble
 	private static final String RED = "RED";
 	private static final String BLACK = "BLACK";
 	
-	private int id;
+	private String id;
 	private boolean state; 
 	private ArrayList<String[]> bets;
 	
-	public Gamble(int id)
+	public Gamble(String id)
 	{
 		this.id = id; 
 		this.state = false;
 		this.bets = new ArrayList<String[]>(); 
 	}	
 	
-	public int getId()
+	public String getId()
 	{
 		return id;
 	}	
-	public void setId(int id)
+	public void setId(String id)
 	{
 		this.id = id;
 	}
