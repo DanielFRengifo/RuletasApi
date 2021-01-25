@@ -4,6 +4,9 @@ import static spark.Spark.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.bson.Document;
 
@@ -29,7 +32,23 @@ public class ServiceMain
 		MongoClient mongoClient = new MongoClient(uri);
 		MongoDatabase database = mongoClient.getDatabase("test");		
 		db = database.getCollection(DB_NAME);		
-		gambles = new HashMap<String,Gamble>(); 
+		gambles = new HashMap<String,Gamble>();
+		
+		get("/Ruletas", (request, response) -> 
+        { 
+        	String resp = "";
+        	Set<String> keys = gambles.keySet();
+        	Iterator<String> it = keys.iterator();
+            while (it.hasNext()) 
+            {
+            	Gamble gamble = gambles.get(it.next());
+            	resp += "Ruleta: " + gamble.getId() + " Estado: ";
+    			resp += (gamble.getState() ? "ABIERTA" : "CERRADA");
+    			resp += " || ";
+            }
+        	
+        	return resp;
+        });
 		
 		post("/Ruleta", (request, response) -> 
         {
@@ -40,7 +59,8 @@ public class ServiceMain
         	db.insertOne(document);        	
         	String id = document.get("_id").toString();
         	gamble.setId(id);        	
-        	gambles.put(id, gamble);        	
+        	gambles.put(id, gamble);   
+        	
         	return String.valueOf(gamble.getId());
         });
 	}
