@@ -32,6 +32,7 @@ public class Gamble
 	}	
 	public void setState(boolean state)
 	{
+		System.out.println("WTG");
 		this.state = state;
 	}
 	
@@ -42,6 +43,21 @@ public class Gamble
 	public void setBets(ArrayList<String[]> bets)
 	{
 		this.bets = bets;
+	}
+	
+	public void setBetsString(String bets)
+	{
+		if (bets.length()>3)
+		{
+			String[] arr = bets.split(";");
+			String[] arr2;
+			for (String item : arr) 
+		    {
+				arr2 = item.split(":");
+				String[] resp = {arr2[0], arr2[1], arr2[2]};
+				this.bets.add(resp);
+		    }	
+		}			
 	}
 	
 }

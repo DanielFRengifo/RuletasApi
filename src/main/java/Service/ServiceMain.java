@@ -2,10 +2,8 @@ package Service;
 
 import static spark.Spark.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.bson.Document;
@@ -13,6 +11,7 @@ import org.bson.Document;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
@@ -34,14 +33,27 @@ public class ServiceMain
 		db = database.getCollection(DB_NAME);		
 		gambles = new HashMap<String,Gamble>();
 		
+		FindIterable<Document> cursor = db.find();
+		Iterator<Document> it = cursor.iterator();
+	    while (it.hasNext()) 
+	    {
+	    	Document documentLoad = (Document) it.next();
+	    	System.out.println(documentLoad);
+	    	Gamble gambleLoad = new Gamble();
+	    	gambleLoad.setId(documentLoad.get("_id").toString());
+	    	gambleLoad.setState(documentLoad.get("state").toString().equals("true"));
+	    	gambleLoad.setBetsString(documentLoad.get("bets").toString());	
+	    	gambles.put(documentLoad.get("_id").toString(), gambleLoad);
+	    }
+	    
 		get("/Ruletas", (request, response) -> 
         { 
         	String resp = "";
         	Set<String> keys = gambles.keySet();
-        	Iterator<String> it = keys.iterator();
-            while (it.hasNext()) 
+        	Iterator<String> iter = keys.iterator();
+            while (iter.hasNext()) 
             {
-            	Gamble gamble = gambles.get(it.next());
+            	Gamble gamble = gambles.get(iter.next());
             	resp += "Ruleta: " + gamble.getId() + " Estado: ";
     			resp += (gamble.getState() ? "ABIERTA" : "CERRADA");
     			resp += " || ";
@@ -85,9 +97,9 @@ public class ServiceMain
 	public static void updateDB(Gamble gamble)
 	{
 		BasicDBObject query = new BasicDBObject();
-    	query.put("id", gamble.getId());
+    	query.put("_id", gamble.getId());
     	BasicDBObject newDocument = new BasicDBObject();
-    	newDocument.put("id", gamble.getId());
+    	newDocument.put("_id", gamble.getId());
     	newDocument.put("state", "true");
     	newDocument.put("bets", "");
     	BasicDBObject updateObject = new BasicDBObject();
