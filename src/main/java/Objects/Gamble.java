@@ -9,12 +9,12 @@ public class Gamble
 	
 	private String id;
 	private boolean state; 
-	private ArrayList<String[]> bets;
+	private ArrayList<Bet> bets;
 	
 	public Gamble()
 	{
 		this.state = false;
-		this.bets = new ArrayList<String[]>(); 
+		this.bets = new ArrayList<Bet>(); 
 	}	
 	
 	public String getId()
@@ -36,11 +36,11 @@ public class Gamble
 		this.state = state;
 	}
 	
-	public ArrayList<String[]> getBets()
+	public ArrayList<Bet> getBets()
 	{
 		return bets;
 	}	
-	public void setBets(ArrayList<String[]> bets)
+	public void setBets(ArrayList<Bet> bets)
 	{
 		this.bets = bets;
 	}
@@ -54,10 +54,25 @@ public class Gamble
 			for (String item : arr) 
 		    {
 				arr2 = item.split(":");
-				String[] resp = {arr2[0], arr2[1], arr2[2]};
+				Bet resp = new Bet(arr2[0], Integer.parseInt(arr2[1]), arr2[2]);
 				this.bets.add(resp);
 		    }	
 		}			
 	}
+	
+	public boolean bet(Bet bet)
+	{
+		String betString = bet.getBet();
+		if ((betString.equals(RED) || betString.equals(BLACK) || betString.matches("[0-9]+")))
+		{
+			bets.add(bet);
+			
+			return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}	
 	
 }

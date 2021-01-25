@@ -4,6 +4,7 @@ import static spark.Spark.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.bson.Document;
@@ -15,6 +16,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+import Objects.Bet;
 import Objects.Gamble;
 
 public class ServiceMain 
@@ -86,6 +88,31 @@ public class ServiceMain
             	updateDB(gamble);            	
             	
             	return "TRUE";
+        	}
+        	catch (Exception e)
+        	{
+        		return "FALSE";
+        	}
+        });
+		
+		post("/Apuesta", (request, response) -> 
+        {
+        	try
+        	{
+        		String[] arrParams = request.body().split(",");
+        		String[] tempStr = new String[2];
+        		Map<String,String> params = new HashMap<String,String>(); 
+        		for (String string : arrParams) 
+        		{
+        			tempStr = string.split(":");
+        			params.put(tempStr[0].replaceAll("\\W+",""), tempStr[1].replaceAll("\\W+",""));
+        		}      		
+            	Gamble gamble = gambles.get(params.get("id").toString());
+            	Bet bet = new Bet(params.get("bet"), Integer.parseInt(params.get("money")), request.headers("Pragma").toString());
+            	boolean victory = gamble.bet(bet);
+            	updateDB(gamble);
+            	
+            	return ((victory) ? "TRUE" : "FALSE");
         	}
         	catch (Exception e)
         	{
