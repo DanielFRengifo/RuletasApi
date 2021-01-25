@@ -2,19 +2,19 @@ package Objects;
 
 import java.util.ArrayList;
 
-public class Ruleta 
+public class Gamble 
 {
 	private static final String RED = "RED";
 	private static final String BLACK = "BLACK";
 	
 	private int id;
-	private boolean open; 
+	private boolean state; 
 	private ArrayList<String[]> bets;
 	
-	public Ruleta(int id)
+	public Gamble(int id)
 	{
 		this.id = id; 
-		this.open = false;
+		this.state = false;
 		this.bets = new ArrayList<String[]>(); 
 	}	
 	
@@ -27,13 +27,13 @@ public class Ruleta
 		this.id = id;
 	}
 	
-	public boolean getOpen()
+	public boolean getState()
 	{
-		return open;
+		return state;
 	}	
-	public void setOpen(boolean open)
+	public void setState(boolean state)
 	{
-		this.open = open;
+		this.state = state;
 	}
 	
 	public ArrayList<String[]> getBets()
