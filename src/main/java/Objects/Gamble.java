@@ -58,6 +58,16 @@ public class Gamble
 		    }	
 		}			
 	}
+	public String getBetsString()
+	{
+		String resp = "";
+		for (Bet bet : bets) 
+        {
+			resp += (resp.equals("") ? "" : ";");
+			resp += bet.getBet()+":"+String.valueOf(bet.getAmount())+":"+bet.getUser();
+        }
+		return resp;
+	}
 	
 	public boolean bet(Bet bet)
 	{

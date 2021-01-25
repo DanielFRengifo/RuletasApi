@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
@@ -151,13 +152,15 @@ public class ServiceMain
 	public static void updateDB(Gamble gamble)
 	{
 		BasicDBObject query = new BasicDBObject();
-    	query.put("_id", gamble.getId());
+    	query.put("_id", new ObjectId(gamble.getId()));
+    	System.out.println(query);
     	BasicDBObject newDocument = new BasicDBObject();
-    	newDocument.put("_id", gamble.getId());
-    	newDocument.put("state", "true");
-    	newDocument.put("bets", "");
+    	newDocument.put("_id", new ObjectId(gamble.getId()));
+    	newDocument.put("state", String.valueOf(gamble.getState()).toLowerCase());
+    	newDocument.put("bets", gamble.getBetsString());
     	BasicDBObject updateObject = new BasicDBObject();
     	updateObject.put("$set", newDocument);
+    	System.out.println(updateObject);
     	db.updateOne(query, updateObject);
 	}
 }
