@@ -42,7 +42,6 @@ public class ServiceMain
 	    while (it.hasNext()) 
 	    {
 	    	Document documentLoad = (Document) it.next();
-	    	System.out.println(documentLoad);
 	    	Gamble gambleLoad = new Gamble();
 	    	gambleLoad.setId(documentLoad.get("_id").toString());
 	    	gambleLoad.setState(documentLoad.get("state").toString().equals("true"));
@@ -136,11 +135,11 @@ public class ServiceMain
         			params.put(tempStr[0].replaceAll("\\W+",""), tempStr[1].replaceAll("\\W+",""));
         		}      		
             	Gamble gamble = gambles.get(params.get("id").toString());
-            	Bet bet = new Bet(params.get("bet"), Integer.parseInt(params.get("money")), request.headers("Pragma").toString());
-            	boolean victory = gamble.bet(bet);
+            	Bet bet = new Bet(params.get("bet"), Integer.parseInt(params.get("money")), request.headers("From").toString());
+            	boolean success = gamble.bet(bet);
             	updateDB(gamble);
             	
-            	return ((victory) ? "TRUE" : "FALSE");
+            	return ((success) ? "TRUE" : "FALSE");
         	}
         	catch (Exception e)
         	{
@@ -153,14 +152,12 @@ public class ServiceMain
 	{
 		BasicDBObject query = new BasicDBObject();
     	query.put("_id", new ObjectId(gamble.getId()));
-    	System.out.println(query);
     	BasicDBObject newDocument = new BasicDBObject();
     	newDocument.put("_id", new ObjectId(gamble.getId()));
     	newDocument.put("state", String.valueOf(gamble.getState()).toLowerCase());
     	newDocument.put("bets", gamble.getBetsString());
     	BasicDBObject updateObject = new BasicDBObject();
     	updateObject.put("$set", newDocument);
-    	System.out.println(updateObject);
     	db.updateOne(query, updateObject);
 	}
 }
