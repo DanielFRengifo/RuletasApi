@@ -2,6 +2,7 @@ package Service;
 
 import static spark.Spark.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class ServiceMain
             	Gamble gamble = gambles.get(iter.next());
             	resp += "Ruleta: " + gamble.getId() + " Estado: ";
     			resp += (gamble.getState() ? "ABIERTA" : "CERRADA");
-    			resp += " || ";
+    			resp += (iter.hasNext() ? " || " : "");
             }
         	
         	return resp;
@@ -88,6 +89,32 @@ public class ServiceMain
             	updateDB(gamble);            	
             	
             	return "TRUE";
+        	}
+        	catch (Exception e)
+        	{
+        		return "FALSE";
+        	}
+        });
+		
+		post("/CloseRuleta", (request, response) -> 
+        {
+        	try
+        	{
+        		String id = request.body().split(":")[1].replaceAll("[^a-zA-Z0-9]", "");
+        		Gamble gamble = gambles.get(id); 
+            	if (gamble.getState())
+            	{                   	
+            		String resp = gamble.close();
+            		gamble.setBets(new ArrayList<Bet>());
+            		gamble.setState(false);
+            		updateDB(gamble);
+            		
+                	return "TRUE || " + resp;
+            	}
+            	else
+            	{
+            		return "TRUE";
+            	}
         	}
         	catch (Exception e)
         	{

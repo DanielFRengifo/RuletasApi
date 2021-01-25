@@ -32,7 +32,6 @@ public class Gamble
 	}	
 	public void setState(boolean state)
 	{
-		System.out.println("WTG");
 		this.state = state;
 	}
 	
@@ -74,5 +73,55 @@ public class Gamble
 			return false;
 		}
 	}	
+	
+	public String close()
+	{
+		int numero = (int) (Math.random( )*37);
+		String resp = "";
+		for (Bet bet : bets) 
+        {
+	        resp += "Usuario: " + bet.getUser() + " ";
+	        String betString = bet.getBet();
+	        if (betString.matches("[0-9]+"))
+	        {
+	        	if (betString.equals(String.valueOf(numero)))
+	        	{
+	        		resp += "Monto: " + String.valueOf((int) (bet.getAmount() * 5));
+	        	}
+	        	else
+	        	{
+	        		resp += "Monto: -" + String.valueOf(bet.getAmount());
+	        	}
+	        }
+	        else
+	        {
+	        	if (numero % 2 == 0)
+	        	{
+	        		if (betString.equals(RED))
+	        		{
+	        			resp += "Monto: " + String.valueOf((int) (bet.getAmount() * 1.8));
+	        		}
+	        		else
+	        		{
+	        			resp += "Monto: -" + String.valueOf(bet.getAmount());
+	        		}
+	        	}
+	        	else
+	        	{
+	        		if (betString.equals(BLACK))
+	        		{
+	        			resp += "Monto: " + String.valueOf((int) (bet.getAmount() * 1.8));
+	        		}
+	        		else
+	        		{
+	        			resp += "Monto: -" + String.valueOf(bet.getAmount());
+	        		}
+	        	}
+	        }
+	        resp += " || ";
+        }	
+		
+		return resp.substring(0, resp.length() - 4);
+	}
 	
 }
