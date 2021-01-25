@@ -63,14 +63,35 @@ public class ServiceMain
         	
         	return String.valueOf(gamble.getId());
         });
+		
+		post("/OpenRuleta", (request, response) -> 
+        {
+        	try
+        	{        
+            	String id = request.body().split(":")[1].replaceAll("[^a-zA-Z0-9]", "");
+            	Gamble gamble = gambles.get(id); 
+            	gamble.setState(true);
+            	updateDB(gamble);            	
+            	
+            	return "TRUE";
+        	}
+        	catch (Exception e)
+        	{
+        		return "FALSE";
+        	}
+        });
 	}
 	
 	public static void updateDB(Gamble gamble)
 	{
-		Document document = new Document();
-    	document.put("id", String.valueOf(gamble.getId()));
-    	document.put("state", String.valueOf(gamble.getState()));
-    	document.put("bets", String.valueOf(gamble.getBets()));
-    	db.insertOne(document);
+		BasicDBObject query = new BasicDBObject();
+    	query.put("id", gamble.getId());
+    	BasicDBObject newDocument = new BasicDBObject();
+    	newDocument.put("id", gamble.getId());
+    	newDocument.put("state", "true");
+    	newDocument.put("bets", "");
+    	BasicDBObject updateObject = new BasicDBObject();
+    	updateObject.put("$set", newDocument);
+    	db.updateOne(query, updateObject);
 	}
 }
